@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qfedu.examsys.dao.EnrollDao">
+
+    <resultMap id="enrollMap" type="enroll">
+        <id column="id" property="id"></id>
+        <result column="uid" property="uid"></result>
+        <result column="eid" property="eid"></result>
+        <result column="subjectId" property="subjectId"></result>
+        <result column="createtime" property="createTime"></result>
+        <association property="user" column="uid" select="com.qfedu.examsys.dao.UserDao.findUserById"></association>
+        <association property="exam" column="eid" select="com.qfedu.examsys.dao.ExamDao.findExamById"></association>
+        <association property="subject" column="subjectId" select="com.qfedu.examsys.dao.SubjectDao.findBySubjectId"></association>
+    </resultMap>
+
+
+    <!--向报名表中添加报名信息-->
+    <insert id="addEnrollInfo" parameterType="map">
+        insert into enroll(
+        <trim suffixOverrides=",">
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="eid != null">
+                eid,
+            </if>
+            <if test="subjectid != null">
+                subjectId,
+            </if>
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            <if test="uid != null">
+                #{uid},
+            </if>
+            <if test="eid != null">
+                #{eid},
+            </if>
+            <if test="subjectid != null">
+                #{subjectid},
+            </if>
+        </trim>
+        )
+    </insert>
+
+<!--    &lt;!&ndash;根据报名时报名表中生成的id,展示本次考试的报名信息&ndash;&gt;-->
+<!--    <select id="selectEnrollByUserId" parameterType="int" resultMap="enrollMap">-->
+<!--        select * from enroll where id = #{id}-->
+<!--    </select>-->
+
+    <!--查询所有的考试信息-->
+    <select id="findAllEnroll" parameterType="int" resultMap="enrollMap">
+        select * from enroll where uid = #{uid}
+    </select>
+
+    <!--老师查看所有报名信息-->
+    <select id="findAllEnrolls" parameterType="int" resultMap="enrollMap">
+        select * from enroll where subjectId = #{sid}
+    </select>
+
+    <!--根据用户Id、学科Id、报名时间查询报名信息-->
+    <select id="findEnrollsByUidAndSubjectIdAndCreatetime" parameterType="map" resultMap="enrollMap">
+        select * from enroll
+        <where>
+            <if test="subjectId != null and subjectId != ''">
+                and subjectId = #{subjectId}
+            </if>
+            <if test="createtime != null and createtime != ''">
+                and createtime = #{createtime}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

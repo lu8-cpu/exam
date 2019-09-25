@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="layui/css/layui.css" />
+		<script type="text/javascript" src="layui/layui.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.12.4.min.js" ></script>
+	</head>
+	<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">考试系统后台</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left" >
+      <li class="layui-nav-item"><a href="">首页</a></li>
+      <li class="layui-nav-item"><a href="">用户管理</a></li>
+      <li class="layui-nav-item">
+        <a href="javascript:;">其它系统</a>
+        <dl class="layui-nav-child">
+          <dd><a href="http://1.xiehou.applinzi.com/dist/index.html#/login">邂逅之恋</a></dd>
+          <dd><a href="">爱学习视频管理</a></dd>
+          <dd><a href="">授权管理</a></dd>
+        </dl>
+      </li>
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item">
+          管理员
+      </li>
+      <li class="layui-nav-item"><a href="AfterLogin.html">退出</a></li>
+    </ul>
+  </div>
+  
+  <div class="layui-side layui-bg-black ">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul id="menu" class="layui-nav layui-nav-tree layui-bg-black"   lay-filter="test">
+<!--        <li class="layui-nav-item layui-nav-itemed">-->
+<!--          <a class="" href="javascript:;">试题题库</a>-->
+<!--          <dl class="layui-nav-child" >-->
+<!--            <dd><a href="ListAnythingRadios.html" target="myframe">总选择题</a></dd>-->
+<!--            <dd><a href="ListAnythingJudges.html" target="myframe">总判断题</a></dd>-->
+<!--            <dd><a href="ListAnythingShortAnswers.html" target="myframe">总简答题</a></dd>-->
+<!--            <dd><a href="ListAllRadios.html" target="myframe">选择题</a></dd>-->
+<!--            <dd><a href="ListAllJudges.html" target="myframe">判断题</a></dd>-->
+<!--            <dd><a href="ListAllShortAnswers.html" target="myframe">简答题</a></dd>-->
+<!--          </dl>-->
+<!--        </li>&ndash;&gt;-->
+<!--        <li class="layui-nav-item">-->
+<!--          <a href="javascript:;">试题导入</a>-->
+<!--          <dl class="layui-nav-child">-->
+<!--            <dd><a href="importRadio.html" target="myframe">选择题导入</a></dd>-->
+<!--            <dd><a href="importJudge.html" target="myframe">判断题导入</a></dd>-->
+<!--            <dd><a href="importShortAnswer.html" target="myframe">简答题导入</a></dd>-->
+<!--            <dd><a href="">超链接</a></dd>-->
+<!--          </dl>-->
+<!--        </li>-->
+<!--        <li class="layui-nav-item"><a href="">生成试卷</a></li>-->
+      </ul>
+    </div>
+  </div>
+  
+  <div class="layui-body">
+    <iframe name="myframe" width="100%" height="100%" frameborder="0">1111</iframe>
+  </div>
+
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    我太难了
+  </div>
+</div>
+<script>
+//JavaScript代码区域
+layui.use('element', function(){
+  var element = layui.element;
+  
+  $.ajax({
+  	type:"get",
+  	url:"menu.json",
+  	dataType:"json",
+  	success:function(data){
+  		$(data).each(function(){
+  			var html = '<li class="layui-nav-item">';
+		          html += '<a class="" href="javascript:;">' + this.pname + '</a>';
+		          html += '<dl class="layui-nav-child">';
+		          
+		          var cmenu = this.cmenu;
+		          $(cmenu).each(function(){
+		          	html += '  <dd><a href="' + this.url + '" target="myframe">' + this.cname + '</a></dd>';
+		          })
+		          
+		          html += '</dl>';
+		          html += '</li>';
+		    $("#menu").append($(html));  
+  			
+  		});
+  		// 重新渲染
+  		element.render();
+  	}
+  })
+  
+  
+});
+</script>
+
+</body>
+</html>

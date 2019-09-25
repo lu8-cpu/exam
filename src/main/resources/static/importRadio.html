@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/jquery-1.12.2.min.js"></script>
+</head>
+<body>
+<form id="form1" action="import/importRadio.do"  method="post" enctype="multipart/form-data" onclick="LimitAttach()">
+    <input type="file" name="upfile"  id="files"/>
+    <input type="submit" value="导入"/>
+
+
+
+</form>
+
+<script type="text/javascript">
+    function LimitAttach() {
+        var file=document.getElementById("files").value;
+        var form1=document.getElementById("form1");
+        var ext = file.slice(file.lastIndexOf(".")+1).toLowerCase();
+        if ("xlsx" !== ext) {
+            alert("只能上传Excle文件");
+            return;
+        }
+        else {
+            // form1.action="fupload.action?files="+file;
+            form1.submit();
+        }
+    }
+
+</script>
+
+
+
+<script type="text/javascript">
+
+
+//    function checkData() {
+//        var fileDir = $("#file").val();
+//        var suffix = fileDir.substr(fileDir.lastIndexOf("."));
+//        if ("" == fileDir) {
+//            alert("选择需要导入的Excel文件！");
+//            return false;
+//        }
+//        if (".xls" !== suffix && ".xlsx" !== suffix) {
+//            alert("选择Excel格式的文件导入！");
+//            return false;
+//        }
+//
+//        return true;
+//    }
+</script>
+
+</body>
+</html>

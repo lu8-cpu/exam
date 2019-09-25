@@ -1,0 +1,27 @@
+[{
+	"pname":"试题题库",
+	"cmenu":[{
+		"cname":"总题库",
+		"url":"ListAnythingRadios.html"
+	},{
+		"cname":"现用题库",
+		"url":"ListAllRadios.html"
+	}
+
+
+	]
+},
+
+	{
+	"pname":"生成试卷",
+	"cmenu":[{
+		"cname":"cmenu1",
+		"url":"aaa.html"
+	},{
+		"cname":"cmenu2",
+		"url":"bbb.html"
+	},{
+		"cname":"cmenu3",
+		"url":"ccc.html"
+	}]
+}]

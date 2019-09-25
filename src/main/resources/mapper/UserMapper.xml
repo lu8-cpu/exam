@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qfedu.examsys.dao.UserDao" >
+  <resultMap id="BaseResultMap" type="com.qfedu.examsys.pojo.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="subjectId" property="subjectid" jdbcType="INTEGER" />
+    <result column="rid" property="rid" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, password, phone, sex, subjectId, rid, createtime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from examsys.user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qfedu.examsys.pojo.User" >
+    insert into user (id, username, password, 
+      phone, sex, subjectId, 
+      rid, createtime)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{subjectid,jdbcType=INTEGER}, 
+      #{rid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qfedu.examsys.pojo.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="subjectid != null" >
+        subjectId,
+      </if>
+      <if test="rid != null" >
+        rid,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="subjectid != null" >
+        #{subjectid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null" >
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qfedu.examsys.pojo.User" >
+    update user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="subjectid != null" >
+        subjectId = #{subjectid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null" >
+        rid = #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qfedu.examsys.pojo.User" >
+    update examsys.user set password = #{password}
+    where id = #{id}
+  </update>
+
+  <select id="login" parameterType="string" resultType="com.qfedu.examsys.pojo.User">
+    select * from examsys.user where username = #{username}
+  </select>
+
+  <select id="findAllRole" parameterType="int" resultType="com.qfedu.examsys.pojo.User">
+    select * from examsys.user where rid = #{rid}
+  </select>
+
+  <!--根据用户Id查询用户信息-->
+  <select id="findUserById" parameterType="int" resultMap="BaseResultMap">
+    select * from user where id = #{id};
+  </select>
+
+  <delete id="deleteByIdUser" parameterType="list">
+    delete from examsys.user where id in
+    <foreach collection="list" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+<!--    通过手机号码预注册   by: imlee   -->
+    <insert id="signUpFirst" parameterType="string">
+        insert into user (phone) values (#{telephoneNumber})
+    </insert>
+
+<!--    补充 用户名，密码   by: imlee   -->
+    <update id="signUp" parameterType="list">
+        update user set username = #{username}, password = #{password} where phone = #{telephoneNumber}
+    </update>
+
+<!--  通过手机号码登录  by: imlee   -->
+  <select id="signInByTelephoneNumber" parameterType="String" resultType="user">
+    select * from user where phone = #{telephoneNumber}
+  </select>
+
+<!--  通过手机号码重置密码  by: imlee -->
+  <update id="resetPassword" parameterType="list">
+    update user set password = #{password} where phone = #{telephoneNumber}
+  </update>
+
+</mapper>

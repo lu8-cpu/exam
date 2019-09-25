@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qfedu.examsys.dao.ShortAnswerDao" >
+  <resultMap id="BaseResultMap" type="com.qfedu.examsys.pojo.ShortAnswer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, answer
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from shortanswer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from shortanswer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qfedu.examsys.pojo.ShortAnswer" >
+    insert into shortanswer (id, title, answer
+      )
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qfedu.examsys.pojo.ShortAnswer" >
+    insert into shortanswer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qfedu.examsys.pojo.ShortAnswer" >
+    update shortanswer
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qfedu.examsys.pojo.ShortAnswer" >
+    update shortanswer
+    set title = #{title,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--
+   Lei创建：
+  时间8-29 22:08
+  findShortAnswers集合查找 根据subjectId
+  -->
+  <select id="findShortAnswers" parameterType="int" resultMap="BaseResultMap">
+    select * from examsys.shortAnswer where  examsys.shortAnswer.subjectId =#{subjectId} and  shortAnswer.recentType = 1
+  </select>
+
+  <!--
+陈曦创建：
+时间8.30 15:00
+-->
+  <insert id="insertManyShortAnswer">
+    insert into shortAnswer(title, answer, subjectId,recentType)
+    values
+    <foreach collection="list" item="shortAnswer" separator=",">
+      (#{shortAnswer.title},#{shortAnswer.answer},#{shortAnswer.subjectId},0)
+    </foreach>
+  </insert>
+
+
+  <!--
+   陈曦创建：
+   时间8.31 10:00
+   -->
+  <resultMap id="ShortAnswerAllMap" type="shortAnswer">
+    <id column="id" property="id"></id>
+    <result column="title" property="title"></result>
+    <result column="answer" property="answer"></result>
+    <result column="subjectId" property="subjectId"></result>
+    <association property="subject" resultMap="com.qfedu.examsys.dao.SubjectDao.subjectMapOne">
+
+    </association>
+  </resultMap>
+  <select id="findAllShortAnswers" parameterType="int" resultMap="ShortAnswerAllMap">
+    select sa.*, s.name
+    from shortAnswer sa
+    inner join subject s on sa.subjectId = s.id and sa.recentType = 1
+    <where>
+      <if test="name!=null">
+        name like "%${name}%"
+      </if>
+      <!--            <if test="typename==null">-->
+      <!--                and typename like "%1%"-->
+      <!--            </if>-->
+    </where>
+  </select>
+
+  <!--    根据id查询-->
+  <select id="QueryShortAnswerById" parameterType="int" resultType="shortAnswer">
+    select *
+    from shortAnswer
+    where id = #{id}
+  </select>
+  <!--修改-->
+  <update id="updateShortAnswerAnswer" parameterType="shortAnswer">
+    update shortAnswer
+    set answer=#{answer}
+    where id = #{id}
+  </update>
+
+  <select id="findAnythingShortAnswer" parameterType="int" resultMap="ShortAnswerAllMap">
+    select sa.*, s.name
+    from shortAnswer sa
+           inner join subject s on sa.subjectId = s.id and sa.recentType =0
+    <where>
+      <if test="name!=null">
+        name like "%${name}%"
+      </if>
+      <!--            <if test="typename==null">-->
+      <!--                and typename like "%1%"-->
+      <!--            </if>-->
+    </where>
+  </select>
+  <!--    录入 更改状态-->
+  <select id="updateShortAnswerRecentType" parameterType="shortAnswer">
+    update shortAnswer
+    set recentType = 1
+    where id = #{id}
+
+  </select>
+
+  <update id="updateRecentTypeByIds" parameterType="list">
+    <!-- foreach 遍历
+        collenction 遍历的元素
+        Item 遍历的元素的临时变量名
+        open、close 遍历出来的数据，使用哪些指定非符号包裹
+        sepator 遍历的元素之间使用的分隔符
+     -->
+    update shortAnswer set recentType = 1 where id in
+    <foreach collection="list" item="id" open="(" close=")" separator="," >
+      #{id}
+    </foreach>
+  </update>
+</mapper>
