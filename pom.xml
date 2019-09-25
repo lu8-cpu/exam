@@ -29,6 +29,7 @@
         <dependency>
             <groupId>cn.dsna</groupId>
             <artifactId>ValidateCode</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <!--    短信验证码   -->

@@ -1,5 +1,6 @@
 package com.qfedu.examsys.aftercontroller;
 
+
 import cn.dsna.util.images.ValidateCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
